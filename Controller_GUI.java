@@ -291,6 +291,13 @@ public class Controller_GUI
      /***********************************************************
      * Menu management
      **********************************************************/
+    //Added by Maksym Pyvovar
+     public MenuItem ConvertPizzaToMenuItem(Pizza pizza)
+    {
+        MenuItem newItem = new MenuItem(Pizza.ID, pizza.getDescription(), pizza.getPrice(), Pizza.TYPE);
+        return newItem;
+    }
+
     public boolean addNewMenuItem(int newID, String newName, double newPrice, byte menuType)
     {
         MenuItem rMenuItem = cDatabase.findMenuItemByID(newID);
@@ -369,9 +376,17 @@ public class Controller_GUI
             //printErrorMessageToView("You are not eligible to edit the order.\nThe order belonges to " + rOrder.getStaffName() + ")");
             return false;    
         }
-        
+        //For testing Purpuses (start)
+        Pizza pizza = new PlainPizza();
+        pizza = new DecoratorPepperoni(pizza);
+        pizza = new DecoratorMushroom(pizza);
+        pizza = new DecoratorBacon(pizza);
+        //For testing Purpuses (end)
         MenuItem    rNewItem = null;
-        
+        if(addItemID==101){
+            rNewItem = ConvertPizzaToMenuItem(pizza);
+        }
+        else{
         rNewItem = cDatabase.findMenuItemByID(addItemID);
         if(rNewItem == null)
         {
@@ -380,7 +395,7 @@ public class Controller_GUI
             addItemID = 0;
             return false;
         }
-        
+    }
          //////////ADD!!!(database)/////////////
          cDatabase.addOrderItem(orderID, rNewItem, addItemQuantity);
          return true;
