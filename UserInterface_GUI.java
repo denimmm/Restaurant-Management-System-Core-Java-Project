@@ -1669,12 +1669,32 @@ public class UserInterface_GUI extends JFrame implements ActionListener {
 
 
                     // Click add to finalize the pizza after toppings selected
-                    JButton btnAdd = new JButton("Add");
+                    JButton btnAdd = new JButton("Create");
                     btnAdd.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent ev) {
                             // Simulate clicking the actual Add button for pizza
+                            Pizza pizza = new PlainPizza(); // Assuming you have a Plain Pizza class
+                            if(toppingsFrame.isVisible()){
+                                if(cbPepperoni.isSelected()) {
+                                    pizza = new DecoratorPepperoni(pizza);
+                                }
+                                if(cbMushrooms.isSelected()) {
+                                    pizza = new DecoratorMushroom(pizza);
+                                }
+                                if(cbCheese.isSelected()) {
+                                    pizza = new DecoratorExtraCheese(pizza);
+                                }
+                                if(cbOlives.isSelected()) {
+                                    pizza = new DecoratorOlives(pizza);
+                                }
+                                if(cbBacon.isSelected()) {
+                                    pizza = new DecoratorBacon(pizza);
+                                }
+                                rcController.setPizza(pizza);
+                            }
                             btnAddItem.doClick();
-
+                            
+                            
                             // Close the toppings window
                             toppingsFrame.dispose();
                         }

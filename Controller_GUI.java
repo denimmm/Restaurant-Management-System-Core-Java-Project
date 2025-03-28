@@ -21,7 +21,8 @@ public class Controller_GUI
     private double      totalSales;         //Today's total sales
     private int         todaysCancelCnt;    //Today's cancel count
     private double      cancelTotal;        //Total cost of today's canceled orders
-    
+    //Added by Maksym Pyvovar
+    private Pizza       pizza; //Pizza for customization
     
     private String      errorMessage;
     
@@ -56,6 +57,10 @@ public class Controller_GUI
         totalSales = 0;
         todaysCancelCnt = 0;
         cancelTotal = 0;
+    }
+    public void setPizza(Pizza pizza)
+    {
+        this.pizza = pizza;
     }
     
     private void  setErrorMessage(String errorMessage)
@@ -377,10 +382,10 @@ public class Controller_GUI
             return false;    
         }
         //For testing Purpuses (start)
-        Pizza pizza = new PlainPizza();
-        pizza = new DecoratorPepperoni(pizza);
-        pizza = new DecoratorMushroom(pizza);
-        pizza = new DecoratorBacon(pizza);
+        //Pizza pizza = new PlainPizza();
+        //pizza = new DecoratorPepperoni(pizza);
+        //pizza = new DecoratorMushroom(pizza);
+        //pizza = new DecoratorBacon(pizza);
         //For testing Purpuses (end)
         MenuItem    rNewItem = null;
         if(addItemID==101){
@@ -599,8 +604,7 @@ public class Controller_GUI
         
         while (it.hasNext()) {
             re = it.next();
-            output = String.format("%-4d|%-24s|%5d|%5.2f",
-                                    ++count, re.getItemName(), re.getQuantity(), re.getTotalPrice());
+            output = ++count + "|"+ re.getItemName()+ "|qty = " + re.getQuantity() + "|prc = " + re.getTotalPrice();
            initData.add(output);
         }
         if(initData.isEmpty())

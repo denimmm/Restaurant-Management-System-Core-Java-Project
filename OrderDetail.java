@@ -17,7 +17,7 @@ public class OrderDetail
     /// @brief
     /// List of toppings selected for the item (used for Decorator design pattern).
     /// @author Alex Ratchev
-    private List<String> toppings;
+    //private List<String> toppings;
 
     /**
      * Constructor for objects of class OrderDetail
@@ -31,7 +31,7 @@ public class OrderDetail
         this.totalPrice = this.price * this.quantity;
 
         //Intialize an empty list to store user-selected toppings
-        this.toppings = new ArrayList<>();
+        //this.toppings = new ArrayList<>();
     }
     
     /**************************************************
@@ -61,7 +61,7 @@ public class OrderDetail
     /// @brief Gets the list of selected toppings for the order item.
     /// @return List of topping names.
     /// @author Alex Ratchev
-    public List<String> getToppings() {return this.toppings;}
+    //public List<String> getToppings() {return this.toppings;}
     
     public void addQuantity(byte add)
     {
@@ -71,7 +71,7 @@ public class OrderDetail
     /// @brief Replaces the current toppings with a new list of selected toppings.
     /// @param newToppings A list of new toppings to set.
     /// @author Alex Ratchev
-    public void setToppings(List<String> newToppings) {
-        this.toppings = new ArrayList<>(newToppings); // copy for safety
-    }
+    //public void setToppings(List<String> newToppings) {
+    //    this.toppings = new ArrayList<>(newToppings); // copy for safety
+    //}
 }
