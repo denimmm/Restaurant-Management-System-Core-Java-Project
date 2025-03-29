@@ -41,7 +41,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     private JButton        mainBtnManageMenuItem;
     private JButton        mainBtnShowTotalSales;
     private JButton        mainBtnShowPayment;
-    
+    private JButton        mainBtnMessage;
     //Information panel(SOUTH)
     private JPanel         infoPanel;
     private JLabel         labelLoginUserName;
@@ -63,6 +63,17 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     private EditMenuItemPanel       cEditMenuItemPanel;
     private TotalSalesPanel       cTotalSalesPanel;
     private PaymentPanel        cPaymentPanel;
+    
+    // ----- Message panel for messsge screen -------
+    private JPanel         messagePanel;
+    private JTextArea      messageScreen;
+    private JButton        btnSendMessage;
+    private JComboBox<Employee> employeeList;
+
+    //----- Manager panel
+    private JPanel        managerPanel;
+    private JTextArea     writeMessageArea;
+    private JPanel        actionPanel;
 
 
     private final static int WINDOW_X = 100;
@@ -121,7 +132,30 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         mainPanel.add("TotalSalesPanel", cTotalSalesPanel);
         cPaymentPanel = new PaymentPanel();
         mainPanel.add("PaymentPanel", cPaymentPanel);
+
+        // Message panel
+        messagePanel = new JPanel(new BorderLayout());
+        messageScreen = new JTextArea(10, 30);
+        messageScreen.setEditable(false);
+        messageScreen.setBorder(BorderFactory.createTitledBorder("Messages"));
+        messagePanel.add(new JScrollPane(messageScreen), BorderLayout.CENTER);
         
+        //mager specfic component
+        managerPanel = new JPanel(new BorderLayout());
+        managerPanel.setBorder(BorderFactory.createTitledBorder("Write a message"));
+        writeMessageArea = new JTextArea(10, 30);
+        writeMessageArea.setBorder(BorderFactory.createTitledBorder("Write a message"));
+        actionPanel = new JPanel(new FlowLayout());
+        employeeList = new JComboBox<Employee>();
+        btnSendMessage = new JButton("Send");
+        btnSendMessage.addActionListener(this);
+        actionPanel.add(employeeList);
+        actionPanel.add(btnSendMessage);
+        managerPanel.add(actionPanel, BorderLayout.SOUTH);
+        messagePanel.add(managerPanel, BorderLayout.SOUTH);
+
+
+        mainPanel.add("Message", messagePanel);
         changeMode(MODE_ANONYMOUS);
     }
     
@@ -195,6 +229,10 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         mainBtnShowPayment = new JButton("Show payments");
         mainBtnShowPayment.addActionListener(this);
         mainBtnsPanel.add(mainBtnShowPayment);
+        //add message button --> Project Design
+        mainBtnMessage = new JButton("Message");
+        mainBtnMessage.addActionListener(this);
+        mainBtnsPanel.add(mainBtnMessage);
         
         con.add(mainBtnsPanel, BorderLayout.WEST);
         
@@ -249,6 +287,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnManageMenuItem.setEnabled(false);
                 mainBtnShowTotalSales.setEnabled(false);
                 mainBtnShowPayment.setEnabled(false);
+                mainBtnMessage.setEnabled(false);
                 break;
             case MODE_EMPLOYEE:
                 headBtnLogout.setEnabled(true);
@@ -258,6 +297,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnManageMenuItem.setEnabled(false);
                 mainBtnShowTotalSales.setEnabled(false);
                 mainBtnShowPayment.setEnabled(false);
+                mainBtnMessage.setEnabled(true);
                 break;
            case MODE_MANAGER:
                 headBtnLogout.setEnabled(true);
@@ -267,6 +307,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnManageMenuItem.setEnabled(true);
                 mainBtnShowTotalSales.setEnabled(true);
                 mainBtnShowPayment.setEnabled(true);
+                mainBtnMessage.setEnabled(true);
                 break;
         }
     }
@@ -415,6 +456,12 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 setClockOutButton();
             }
         }
+        else if (ae.getSource() == mainBtnMessage){
+            changeMainPanel("Message");
+            messageScreen.setText("Welcome to the message screen\n");
+            //employeeList.addItem(makeObj("All Employees"));
+
+        }
     }
     
     /****************************************************************
@@ -503,7 +550,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 if (btnLoginOK.getVerifyInputWhenFocusTarget()) {
                     //Try to get focus
                     btnLoginOK.requestFocusInWindow();
-                    if (!btnLoginOK.hasFocus()) {    //Can not get focus ?Ë the compornent have not been verified
+                    if (!btnLoginOK.hasFocus()) {    //Can not get focus ?ï¿½ the compornent have not been verified
                         return;
                     }
                 }  
@@ -925,7 +972,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 if (btnOK.getVerifyInputWhenFocusTarget()) {
                     //Try to get focus
                     btnOK.requestFocusInWindow();
-                    if (!btnOK.hasFocus()) {    //Can not get focus ?Ë the compornent have not been verified
+                    if (!btnOK.hasFocus()) {    //Can not get focus ?ï¿½ the compornent have not been verified
                         return;
                     }
                 }  
@@ -1264,7 +1311,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 if (btnOK.getVerifyInputWhenFocusTarget()) {
                     //Try to get focus
                     btnOK.requestFocusInWindow();
-                    if (!btnOK.hasFocus()) {    //Can not get focus ?Ë the compornent have not been verified
+                    if (!btnOK.hasFocus()) {    //Can not get focus ?ï¿½ the compornent have not been verified
                         return;
                     }
                 }  
@@ -1825,7 +1872,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 if (btnAddItem.getVerifyInputWhenFocusTarget()) {
                     //Try to get focus
                     btnAddItem.requestFocusInWindow();
-                    if (!btnAddItem.hasFocus()) {    //Can not get focus ?Ë the compornent have not been verified
+                    if (!btnAddItem.hasFocus()) {    //Can not get focus ?ï¿½ the compornent have not been verified
                         return;
                     }
                 }  
