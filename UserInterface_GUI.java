@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -67,14 +67,12 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     // ----- Message panel for messsge screen -------
     private JPanel         messagePanel;
     private JTextArea      messageScreen;
-    private JButton        btnSendMessage;
-    private JComboBox<Employee> employeeList;
+    // add the write and display buttons
+    private JButton        btnWriteMessage;
+    private JButton        btnDisplayMessages;
+    private JButton        btnSend; // Send button for writing messages
 
-    //----- Manager panel
-    private JPanel        managerPanel;
-    private JTextArea     writeMessageArea;
-    private JPanel        actionPanel;
-
+    
 
     private final static int WINDOW_X = 100;
     private final static int WINDOW_Y = 100;
@@ -134,27 +132,35 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         mainPanel.add("PaymentPanel", cPaymentPanel);
 
         // Message panel
+        
         messagePanel = new JPanel(new BorderLayout());
+    
+        // Text area for displaying messages
         messageScreen = new JTextArea(10, 30);
         messageScreen.setEditable(false);
         messageScreen.setBorder(BorderFactory.createTitledBorder("Messages"));
         messagePanel.add(new JScrollPane(messageScreen), BorderLayout.CENTER);
-        
-        //mager specfic component
-        managerPanel = new JPanel(new BorderLayout());
-        managerPanel.setBorder(BorderFactory.createTitledBorder("Write a message"));
-        writeMessageArea = new JTextArea(10, 30);
-        writeMessageArea.setBorder(BorderFactory.createTitledBorder("Write a message"));
-        actionPanel = new JPanel(new FlowLayout());
-        employeeList = new JComboBox<Employee>();
-        btnSendMessage = new JButton("Send");
-        btnSendMessage.addActionListener(this);
-        actionPanel.add(employeeList);
-        actionPanel.add(btnSendMessage);
-        managerPanel.add(actionPanel, BorderLayout.SOUTH);
-        messagePanel.add(managerPanel, BorderLayout.SOUTH);
 
+        // Panel for Write and Display buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        btnWriteMessage = new JButton("Write");
+        btnDisplayMessages = new JButton("Display");
+        btnSend = new JButton("Send"); 
+        //btnSend.setEnabled(false); // Initially disabled
 
+        // Add action listeners for the buttons
+        btnWriteMessage.addActionListener(this);
+        btnDisplayMessages.addActionListener(this);
+
+        // Add buttons to the button panel
+        buttonPanel.add(btnWriteMessage);
+        buttonPanel.add(btnDisplayMessages);
+        buttonPanel.add(btnSend); // Add the Send button to the panel
+
+        // Add the button panel to the message panel
+        messagePanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Add the message panel to the mainPanel
         mainPanel.add("Message", messagePanel);
         changeMode(MODE_ANONYMOUS);
     }
@@ -288,6 +294,9 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnShowTotalSales.setEnabled(false);
                 mainBtnShowPayment.setEnabled(false);
                 mainBtnMessage.setEnabled(false);
+                btnDisplayMessages.setEnabled(false);
+                btnWriteMessage.setEnabled(false);
+                btnSend.setEnabled(false);
                 break;
             case MODE_EMPLOYEE:
                 headBtnLogout.setEnabled(true);
@@ -298,6 +307,9 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnShowTotalSales.setEnabled(false);
                 mainBtnShowPayment.setEnabled(false);
                 mainBtnMessage.setEnabled(true);
+                btnDisplayMessages.setEnabled(true);
+                btnWriteMessage.setEnabled(false);
+                btnSend.setEnabled(false);
                 break;
            case MODE_MANAGER:
                 headBtnLogout.setEnabled(true);
@@ -308,6 +320,9 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnShowTotalSales.setEnabled(true);
                 mainBtnShowPayment.setEnabled(true);
                 mainBtnMessage.setEnabled(true);
+                btnDisplayMessages.setEnabled(true);
+                btnWriteMessage.setEnabled(true);
+                btnSend.setEnabled(true);
                 break;
         }
     }
@@ -458,9 +473,51 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         }
         else if (ae.getSource() == mainBtnMessage){
             changeMainPanel("Message");
-            messageScreen.setText("Welcome to the message screen\n");
-            //employeeList.addItem(makeObj("All Employees"));
-
+            messageScreen.setText("");
+            System.out.println("User Type: " + rcController.getUserType());
+            if(rcController.getUserType() ==2){
+                btnWriteMessage.setEnabled(true);
+                btnDisplayMessages.setEnabled(true);
+            }
+            else{
+                btnWriteMessage.setEnabled(false);
+                btnDisplayMessages.setEnabled(true);
+            }
+        }
+        else if (ae.getSource() == btnWriteMessage) {
+    
+            messageScreen.setEditable(true);
+            messageScreen.setText("Write your message here...");
+        
+            // Check if the Send button is already initialized
+            if (btnSend == null) {
+                // Initialize the Send button
+                //btnSend = new JButton("Send");
+                btnSend.addActionListener(e -> {
+                    // Get the message from the text area
+                    String message = messageScreen.getText().trim();
+                    if (message.isEmpty() || message.equals("Write your message here...")) {
+                        JOptionPane.showMessageDialog(this, "Message cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+    
+                    JOptionPane.showMessageDialog(this, "Message sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        
+                    // Clear the message screen after sending
+                    messageScreen.setText("");
+                });
+        
+                // Add the Send button to the button panel
+                JPanel buttonPanel = (JPanel) messagePanel.getComponent(1); // Assuming buttonPanel is the second component
+                buttonPanel.add(btnSend);
+                buttonPanel.revalidate();
+                buttonPanel.repaint();
+            }
+        }
+        else if (ae.getSource() == btnDisplayMessages) {
+            
+            messageScreen.setText("Message will display here if any.");
+            messageScreen.setEditable(false); // Make it non-editable after displaying messages
         }
     }
     

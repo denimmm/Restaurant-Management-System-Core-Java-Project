@@ -3,24 +3,24 @@ import java.util.List;
 
 public class ManagerNotifier implements Subject {
     
-   	List<RestaurantEmployee> employees;
+   	List<EmployeeObserver> employees;
 	public ManagerNotifier() {
 		employees = new ArrayList<>();
 	}
 	@Override
 	public void notifyEmployees() {
-		for(RestaurantEmployee employee: employees) {
+		for(EmployeeObserver employee: employees) {
 			employee.update();
 		}
 		
 	}
 	@Override
-	public void addEmployee(RestaurantEmployee e) {
+	public void addEmployee(EmployeeObserver e) {
 		employees.add(e);
 		
 	}
 	@Override
-	public void removeEmployee(RestaurantEmployee e) {
+	public void removeEmployee(EmployeeObserver e) {
 		employees.remove(e);
 	}
 	

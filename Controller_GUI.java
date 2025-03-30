@@ -29,7 +29,11 @@ public class Controller_GUI
     public final static int USER_ANONYMOUS = 0;
     public final static int USER_EMPLOYEE = 1;
     public final static int USER_MANAGER = 2; 
-    
+    //get user type
+    public int getUserType()
+    {
+        return this.userType;
+    }
     public Controller_GUI()
     {
         this.cDatabase = new Database();
