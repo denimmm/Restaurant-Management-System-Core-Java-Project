@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -41,7 +41,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     private JButton        mainBtnManageMenuItem;
     private JButton        mainBtnShowTotalSales;
     private JButton        mainBtnShowPayment;
-    
+    private JButton        mainBtnMessage;
     //Information panel(SOUTH)
     private JPanel         infoPanel;
     private JLabel         labelLoginUserName;
@@ -63,7 +63,16 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     private EditMenuItemPanel       cEditMenuItemPanel;
     private TotalSalesPanel       cTotalSalesPanel;
     private PaymentPanel        cPaymentPanel;
+    
+    // ----- Message panel for messsge screen -------
+    private JPanel         messagePanel;
+    private JTextArea      messageScreen;
+    // add the write and display buttons
+    private JButton        btnWriteMessage;
+    private JButton        btnDisplayMessages;
+    private JButton        btnSend; // Send button for writing messages
 
+    
 
     private final static int WINDOW_X = 100;
     private final static int WINDOW_Y = 100;
@@ -121,7 +130,38 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         mainPanel.add("TotalSalesPanel", cTotalSalesPanel);
         cPaymentPanel = new PaymentPanel();
         mainPanel.add("PaymentPanel", cPaymentPanel);
+
+        // Message panel
         
+        messagePanel = new JPanel(new BorderLayout());
+    
+        // Text area for displaying messages
+        messageScreen = new JTextArea(10, 30);
+        messageScreen.setEditable(false);
+        messageScreen.setBorder(BorderFactory.createTitledBorder("Messages"));
+        messagePanel.add(new JScrollPane(messageScreen), BorderLayout.CENTER);
+
+        // Panel for Write and Display buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        btnWriteMessage = new JButton("Write");
+        btnDisplayMessages = new JButton("Display");
+        btnSend = new JButton("Send"); 
+        //btnSend.setEnabled(false); // Initially disabled
+
+        // Add action listeners for the buttons
+        btnWriteMessage.addActionListener(this);
+        btnDisplayMessages.addActionListener(this);
+
+        // Add buttons to the button panel
+        buttonPanel.add(btnWriteMessage);
+        buttonPanel.add(btnDisplayMessages);
+        buttonPanel.add(btnSend); // Add the Send button to the panel
+
+        // Add the button panel to the message panel
+        messagePanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Add the message panel to the mainPanel
+        mainPanel.add("Message", messagePanel);
         changeMode(MODE_ANONYMOUS);
     }
     
@@ -195,6 +235,10 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         mainBtnShowPayment = new JButton("Show payments");
         mainBtnShowPayment.addActionListener(this);
         mainBtnsPanel.add(mainBtnShowPayment);
+        //add message button --> Project Design
+        mainBtnMessage = new JButton("Message");
+        mainBtnMessage.addActionListener(this);
+        mainBtnsPanel.add(mainBtnMessage);
         
         con.add(mainBtnsPanel, BorderLayout.WEST);
         
@@ -249,6 +293,10 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnManageMenuItem.setEnabled(false);
                 mainBtnShowTotalSales.setEnabled(false);
                 mainBtnShowPayment.setEnabled(false);
+                mainBtnMessage.setEnabled(false);
+                btnDisplayMessages.setEnabled(false);
+                btnWriteMessage.setEnabled(false);
+                btnSend.setEnabled(false);
                 break;
             case MODE_EMPLOYEE:
                 headBtnLogout.setEnabled(true);
@@ -258,6 +306,10 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnManageMenuItem.setEnabled(false);
                 mainBtnShowTotalSales.setEnabled(false);
                 mainBtnShowPayment.setEnabled(false);
+                mainBtnMessage.setEnabled(true);
+                btnDisplayMessages.setEnabled(true);
+                btnWriteMessage.setEnabled(false);
+                btnSend.setEnabled(false);
                 break;
            case MODE_MANAGER:
                 headBtnLogout.setEnabled(true);
@@ -267,6 +319,10 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 mainBtnManageMenuItem.setEnabled(true);
                 mainBtnShowTotalSales.setEnabled(true);
                 mainBtnShowPayment.setEnabled(true);
+                mainBtnMessage.setEnabled(true);
+                btnDisplayMessages.setEnabled(true);
+                btnWriteMessage.setEnabled(true);
+                btnSend.setEnabled(true);
                 break;
         }
     }
@@ -415,6 +471,54 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 setClockOutButton();
             }
         }
+        else if (ae.getSource() == mainBtnMessage){
+            changeMainPanel("Message");
+            messageScreen.setText("");
+            System.out.println("User Type: " + rcController.getUserType());
+            if(rcController.getUserType() ==2){
+                btnWriteMessage.setEnabled(true);
+                btnDisplayMessages.setEnabled(true);
+            }
+            else{
+                btnWriteMessage.setEnabled(false);
+                btnDisplayMessages.setEnabled(true);
+            }
+        }
+        else if (ae.getSource() == btnWriteMessage) {
+    
+            messageScreen.setEditable(true);
+            messageScreen.setText("Write your message here...");
+        
+            // Check if the Send button is already initialized
+            if (btnSend == null) {
+                // Initialize the Send button
+                //btnSend = new JButton("Send");
+                btnSend.addActionListener(e -> {
+                    // Get the message from the text area
+                    String message = messageScreen.getText().trim();
+                    if (message.isEmpty() || message.equals("Write your message here...")) {
+                        JOptionPane.showMessageDialog(this, "Message cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+    
+                    JOptionPane.showMessageDialog(this, "Message sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        
+                    // Clear the message screen after sending
+                    messageScreen.setText("");
+                });
+        
+                // Add the Send button to the button panel
+                JPanel buttonPanel = (JPanel) messagePanel.getComponent(1); // Assuming buttonPanel is the second component
+                buttonPanel.add(btnSend);
+                buttonPanel.revalidate();
+                buttonPanel.repaint();
+            }
+        }
+        else if (ae.getSource() == btnDisplayMessages) {
+            
+            messageScreen.setText("Message will display here if any.");
+            messageScreen.setEditable(false); // Make it non-editable after displaying messages
+        }
     }
     
     /****************************************************************
@@ -503,7 +607,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 if (btnLoginOK.getVerifyInputWhenFocusTarget()) {
                     //Try to get focus
                     btnLoginOK.requestFocusInWindow();
-                    if (!btnLoginOK.hasFocus()) {    //Can not get focus ?Ë the compornent have not been verified
+                    if (!btnLoginOK.hasFocus()) {    //Can not get focus ?ï¿½ the compornent have not been verified
                         return;
                     }
                 }  
@@ -925,7 +1029,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 if (btnOK.getVerifyInputWhenFocusTarget()) {
                     //Try to get focus
                     btnOK.requestFocusInWindow();
-                    if (!btnOK.hasFocus()) {    //Can not get focus ?Ë the compornent have not been verified
+                    if (!btnOK.hasFocus()) {    //Can not get focus ?ï¿½ the compornent have not been verified
                         return;
                     }
                 }  
@@ -1264,7 +1368,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 if (btnOK.getVerifyInputWhenFocusTarget()) {
                     //Try to get focus
                     btnOK.requestFocusInWindow();
-                    if (!btnOK.hasFocus()) {    //Can not get focus ?Ë the compornent have not been verified
+                    if (!btnOK.hasFocus()) {    //Can not get focus ?ï¿½ the compornent have not been verified
                         return;
                     }
                 }  
@@ -1825,7 +1929,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 if (btnAddItem.getVerifyInputWhenFocusTarget()) {
                     //Try to get focus
                     btnAddItem.requestFocusInWindow();
-                    if (!btnAddItem.hasFocus()) {    //Can not get focus ?Ë the compornent have not been verified
+                    if (!btnAddItem.hasFocus()) {    //Can not get focus ?ï¿½ the compornent have not been verified
                         return;
                     }
                 }  
