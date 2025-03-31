@@ -36,7 +36,7 @@ public class Database
      ***************************************************************************/
     public ManagerNotifier getManagerNotifier()
     {
-        return this. managerNotifier;
+        return this.managerNotifier;
     }
      public ArrayList<Staff> getStaffList()
      {
@@ -225,9 +225,9 @@ public class Database
      {
          Staff newStaff;
          if(isManager)
-            newStaff = new Manager(newID, newLastName, newFirstName, newPassward);
+            newStaff = new Manager(newID, newLastName, newFirstName, newPassward, false);
          else
-            newStaff = new Employee(newID, newLastName, newFirstName, newPassward);
+            newStaff = new Employee(newID, newLastName, newFirstName, newPassward, false);
          staffList.add(newStaff);
          if(newStaff instanceof Manager)
          //if(newStaff.getClass().getName().equalsIgnoreCase("Manager"))
@@ -498,9 +498,11 @@ public class Database
                 String passward = record[1].trim();
                 String firstName = record[2].trim();
                 String lastName = record[3].trim();
-
+                String hasAnnouncement = record[4].trim();
+                
+                
                 // Add the data from file to the registerCourses array list
-                Employee rEmployee = new Employee(Integer.parseInt(id),lastName, firstName, passward);
+                Employee rEmployee = new Employee(Integer.parseInt(id),lastName, firstName, passward, Boolean.getBoolean(hasAnnouncement));
                 staffList.add(rEmployee);
                 line = reader.readLine();
             }
@@ -524,9 +526,10 @@ public class Database
                 String passward = record[1].trim();
                 String firstName = record[2].trim();
                 String lastName = record[3].trim();
-
+                String hasAnnouncement = record[4].trim();
+                
                 // Add the data from file to the registerCourses array list
-                Manager rManager = new Manager(Integer.parseInt(id),lastName,firstName, passward);
+                Manager rManager = new Manager(Integer.parseInt(id),lastName,firstName, passward, Boolean.getBoolean(hasAnnouncement));
                 staffList.add(rManager);
                 line = reader.readLine();
             }
@@ -685,7 +688,7 @@ public String loadMessageFromDatabase() throws IOException {
                     continue;
                 }
             
-                writer.write(re.getID() + "," + re.getPassword() + "," + re.getFirstName() + "," + re.getLastName()+ "\r\n");
+                writer.write(re.getID() + "," + re.getPassword() + "," + re.getFirstName() + "," + re.getLastName()+ "," + Boolean.toString(re.getNewAnnouncement()) +"\r\n");
             }
             writer.flush();
             writer.close();

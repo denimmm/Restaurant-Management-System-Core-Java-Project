@@ -10,9 +10,9 @@ public class Manager extends Staff
     {
         super();
     }
-    public Manager( int newID, String newLastName, String newFirstName, String newPassward)
+    public Manager( int newID, String newLastName, String newFirstName, String newPassward, boolean hasAnnouncement)
     {
-        super(newID, newLastName, newFirstName, newPassward);
+        super(newID, newLastName, newFirstName, newPassward, hasAnnouncement);
         wageRate = MINIMUM_RATE;
     }
     

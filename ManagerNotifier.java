@@ -8,15 +8,14 @@ import java.util.List;
 import javax.xml.crypto.Data;
 
 public class ManagerNotifier implements Subject {
-    
+    Database db;
    	List<Staff> employees;
 	public ManagerNotifier(Database db) {
-		employees = new ArrayList<>();
-		employees = db.getStaffList();
+		this.db = db;
 	}
 	@Override
 	public void notifyEmployees() {
-		for(Staff employee: employees) {
+		for(Staff employee: db.getStaffList()) {
 			employee.update();
 		}
 		
