@@ -9,25 +9,25 @@ import javax.xml.crypto.Data;
 
 public class ManagerNotifier implements Subject {
     Database db;
-   	List<Staff> employees;
+   	List<EmployeeObserver> employees;
 	public ManagerNotifier(Database db) {
 		this.db = db;
 	}
 	@Override
 	public void notifyEmployees() {
-		for(Staff employee: db.getStaffList()) {
+		for(EmployeeObserver employee: db.getStaffList()) {
 			employee.update();
 		}
 		
 	}
 	@Override
-	public void addEmployee(Staff e) {
+	public void addEmployee(EmployeeObserver e) {
 		// add it to arraylist of staff in database
 		employees.add(e);
 		
 	}
 	@Override
-	public void removeEmployee(Staff e) {
+	public void removeEmployee(EmployeeObserver e) {
 		// remove it from arraylist of staff in database
 		employees.remove(e);
 	}
