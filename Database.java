@@ -5,7 +5,6 @@
 import java.util.*;
 import java.io.*;
 import java.lang.*;
-import java.util.Comparator;
 
 public class Database
 {
@@ -15,6 +14,8 @@ public class Database
     private final static String REPORT_FILE = "dataFiles/reports/report_";
     private final static String PAYMENT_FILE = "dataFiles/reports/payment_";
     private final static String WAGE_INFO_FILE = "dataFiles/wage_info.txt";
+    private final static String ANNOUNCEMENT_FILE = "dataFiles/announcement.txt";
+    private final static String MESSAGE_FILE = "dataFiles/message.txt";
     
     private ArrayList<Staff> staffList = new ArrayList<Staff>();
     private ArrayList<MenuItem> menuList = new ArrayList<MenuItem>();
@@ -593,7 +594,50 @@ public class Database
             throw new DatabaseException(message);
         }
     }
+
+
     
+    // message loade file 
+    public void loadAnnouncementState() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(ANNOUNCEMENT_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                int id = Integer.parseInt(parts[0]);
+                boolean newAnnouncement = Boolean.parseBoolean(parts[1]);
+    
+                Staff staff = findStaffByID(id);
+                if (staff != null) {
+                    staff.setNewAnnouncement(newAnnouncement);
+                }
+            }
+        }
+    }
+    public void saveAnnouncementState() throws IOException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(ANNOUNCEMENT_FILE))) {
+        for (Staff staff : staffList) {
+            writer.write(staff.getID() + "," + staff.hasNewAnnouncement());
+            writer.newLine();
+        }
+    }
+    
+}
+public void saveMessageToDatabase(String message) throws IOException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(MESSAGE_FILE, true))) {
+        writer.write(message);
+        writer.newLine();
+    }
+}
+public String loadMessageFromDatabase() throws IOException {
+    StringBuilder message = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new FileReader(MESSAGE_FILE))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            message.append(line).append("\n"); // Append each line with a newline character
+        }
+    }
+    return message.toString().trim(); // Return the full message as a single string
+}
     /****************************************************************************
     * File Edit
     ***************************************************************************/

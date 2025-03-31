@@ -6,6 +6,9 @@
  * @version (a version number or a date)
  */
 import java.util.*;
+
+import javax.xml.crypto.Data;
+
 import java.text.*;
 
 public class Controller_GUI
@@ -61,6 +64,10 @@ public class Controller_GUI
         todaysCancelCnt = 0;
         cancelTotal = 0;
     }
+    public Database getDatabase()
+    {
+        return cDatabase;
+    }
     
     private void  setErrorMessage(String errorMessage)
     {
@@ -107,6 +114,10 @@ public class Controller_GUI
     public String getCurrentUserName()
     {
         return this.currentUserName;
+    }
+    public int getCurrentUserID()
+    {
+        return this.currentUserID;
     }
     
     public boolean checkIfUserClockedOut()

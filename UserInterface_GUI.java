@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import javax.swing.*;
@@ -492,7 +493,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             // Check if the Send button is already initialized
             if (btnSend == null) {
                 // Initialize the Send button
-                //btnSend = new JButton("Send");
+                btnSend = new JButton("Send");
                 btnSend.addActionListener(e -> {
                     // Get the message from the text area
                     String message = messageScreen.getText().trim();
@@ -500,11 +501,17 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                         JOptionPane.showMessageDialog(this, "Message cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-    
+                    try{
+                        rcController.getDatabase().saveAnnouncementState();
+                        rcController.getDatabase().saveMessageToDatabase(message);
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+
                     JOptionPane.showMessageDialog(this, "Message sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        
-                    // Clear the message screen after sending
+    
                     messageScreen.setText("");
+                
                 });
         
                 // Add the Send button to the button panel
@@ -512,12 +519,56 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 buttonPanel.add(btnSend);
                 buttonPanel.revalidate();
                 buttonPanel.repaint();
+            }else{
+                if (btnSend.getActionListeners().length == 0) {
+                    btnSend.addActionListener(e -> {
+                        // Get the message from the text area
+                        String message = messageScreen.getText().trim();
+                        if (message.isEmpty() || message.equals("Write your message here...")) {
+                            JOptionPane.showMessageDialog(this, "Message cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+        
+                        // Logic to handle the message (e.g., save to file or notify staff)
+                        
+                        try{
+                            rcController.getDatabase().saveAnnouncementState();
+                            rcController.getDatabase().saveMessageToDatabase(message);
+                            
+                        }catch(Exception ex){
+                            ex.printStackTrace();
+                        }
+                        JOptionPane.showMessageDialog(this, "Message sent successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        
+                        // Clear the message screen after sending
+                        messageScreen.setText("");
+                    });
+                }
             }
         }
         else if (ae.getSource() == btnDisplayMessages) {
-            
-            messageScreen.setText("Message will display here if any.");
-            messageScreen.setEditable(false); // Make it non-editable after displaying messages
+            messageScreen.setEditable(false);
+            messageScreen.setText(""); // Clear the screen
+
+            try {
+                // Load the entire message from the database
+                String message = rcController.getDatabase().loadMessageFromDatabase();
+                Staff currentUser = rcController.getDatabase().findStaffByID(rcController.getCurrentUserID());
+                if (!message.isEmpty()) {
+                    //disiplay if current user has new announcement
+                    if (!currentUser.hasNewAnnouncement()) {
+                        messageScreen.setText( message);
+                        currentUser.setNewAnnouncement(false);
+                        //update file
+                        rcController.getDatabase().saveAnnouncementState();
+                    } 
+                } else {
+                    messageScreen.setText("No messages to display.");
+                }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error loading messages!", "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         }
     }
     
