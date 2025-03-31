@@ -485,11 +485,6 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             }
         }
 
-
-
-        /// message ui starts here
-        /// 
-        /// 
         else if (ae.getSource() == btnWriteMessage) {
     
             messageScreen.setEditable(true);
@@ -538,16 +533,18 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             try {
                 // Load the entire message from the database
                 String message = rcController.getDatabase().loadMessageFromDatabase();
+
                 Staff currentUser = rcController.getDatabase().findStaffByID(rcController.getCurrentUserID());
                 if (!message.isEmpty()) {
                     //disiplay if current user has new announcement
+                    rcController.getDatabase().loadAnnouncementState();
                     if (currentUser.hasNewAnnouncement()) {
                         messageScreen.setText( message);
                         currentUser.setNewAnnouncement(false);//true -->try changing this to true
                         //update file
                         rcController.getDatabase().saveAnnouncementState();
                     }
-                } else {
+                }else {
                     messageScreen.setText("No messages to display.");
                 }
             } catch (IOException ex) {
