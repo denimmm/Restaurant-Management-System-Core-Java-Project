@@ -1,5 +1,5 @@
 public interface Subject {
     void notifyEmployees();
-	void addEmployee(Staff e);
-	void removeEmployee(Staff e);
+	void addEmployee(EmployeeObserver e);
+	void removeEmployee(EmployeeObserver e);
 }
