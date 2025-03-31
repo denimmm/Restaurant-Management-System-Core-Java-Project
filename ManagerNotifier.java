@@ -5,39 +5,34 @@ import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.crypto.Data;
+
 public class ManagerNotifier implements Subject {
     
-   	List<EmployeeObserver> employees;
-	public ManagerNotifier() {
+   	List<Staff> employees;
+	public ManagerNotifier(Database db) {
 		employees = new ArrayList<>();
+		employees = db.getStaffList();
 	}
 	@Override
 	public void notifyEmployees() {
-		for(EmployeeObserver employee: employees) {
+		for(Staff employee: employees) {
 			employee.update();
 		}
 		
 	}
 	@Override
-	public void addEmployee(EmployeeObserver e) {
+	public void addEmployee(Staff e) {
+		// add it to arraylist of staff in database
 		employees.add(e);
 		
 	}
 	@Override
-	public void removeEmployee(EmployeeObserver e) {
+	public void removeEmployee(Staff e) {
+		// remove it from arraylist of staff in database
 		employees.remove(e);
 	}
-	// save message to the file 
-	public void saveMessageToFile(String message) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("messages.txt", true))) {
-            writer.write(message);
-            writer.newLine();
-            writer.write("----");
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	
 		
 	}
 	

@@ -5,7 +5,7 @@
 import java.util.*;
 import java.text.*;
 
-public abstract class Staff 
+public abstract class Staff implements EmployeeObserver
 {
     private int ID;
     private String lastName;
@@ -47,18 +47,11 @@ public abstract class Staff
     }
  
     // implement the method of EmployeeObserver
-    public void update( String message)
+    public void update()
     {
-        System.out.println("Staff: " + getFullName() + " has new announcement: " + newAnnouncement);
         setNewAnnouncement(true);
     }
-    public void update( String newAnnouncement, Order[] newOrderList)
-    {
-        System.out.println("Staff: " + getFullName() + " has new announcement: " + newAnnouncement);
-        setNewAnnouncement(true);
-        orderList = newOrderList;
-    }
-    
+   
     //------------------------------------------------------------
     // setter
     //------------------------------------------------------------

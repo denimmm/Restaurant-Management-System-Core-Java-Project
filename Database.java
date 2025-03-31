@@ -20,7 +20,7 @@ public class Database
     private ArrayList<Staff> staffList = new ArrayList<Staff>();
     private ArrayList<MenuItem> menuList = new ArrayList<MenuItem>();
     private ArrayList<Order> orderList = new ArrayList<Order>();
-    
+    private ManagerNotifier managerNotifier = new ManagerNotifier(this);
     private Date    date;
     int     todaysOrderCounts;
     /****************************************************************************
@@ -34,6 +34,10 @@ public class Database
     /****************************************************************************
      * Getter
      ***************************************************************************/
+    public ManagerNotifier getManagerNotifier()
+    {
+        return this. managerNotifier;
+    }
      public ArrayList<Staff> getStaffList()
      {
          return staffList;
