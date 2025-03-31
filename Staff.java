@@ -33,7 +33,7 @@ public abstract class Staff implements EmployeeObserver
         state = 0;
     }
     
-    public Staff( int newID, String newLastName, String newFirstName, String newPassword)
+    public Staff( int newID, String newLastName, String newFirstName, String newPassword, boolean hasAnnouncement)
     {
         setID( newID);
         setLastName(newLastName);
@@ -43,7 +43,7 @@ public abstract class Staff implements EmployeeObserver
         finishWorkTime = null;
         state = 0;
         //workState = 0;
-        newAnnouncement = false;
+        newAnnouncement = hasAnnouncement;
     }
  
     // implement the method of EmployeeObserver

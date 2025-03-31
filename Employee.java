@@ -10,9 +10,9 @@ public class Employee extends Staff
     {
         super();
     }   
-    public Employee( int newID, String newLastName, String newFirstName, String newPassward)
+    public Employee( int newID, String newLastName, String newFirstName, String newPassward, boolean hasAnnouncement)
     {
-        super(newID, newLastName, newFirstName, newPassward);
+        super(newID, newLastName, newFirstName, newPassward, hasAnnouncement);
         wageRate = MINIMUM_RATE;
     }
     

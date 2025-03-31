@@ -42,7 +42,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     private JButton        mainBtnManageMenuItem;
     private JButton        mainBtnShowTotalSales;
     private JButton        mainBtnShowPayment;
-    private JButton        mainBtnMessage;
+    private messageButton        mainBtnMessage;
     //Information panel(SOUTH)
     private JPanel         infoPanel;
     private JLabel         labelLoginUserName;
@@ -65,7 +65,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     private TotalSalesPanel       cTotalSalesPanel;
     private PaymentPanel        cPaymentPanel;
     
-    // ----- Message panel for messsge screen -------
+    // ----- Message panel for message screen -------
     private JPanel         messagePanel;
     private JTextArea      messageScreen;
     // add the write and display buttons
@@ -133,7 +133,6 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         mainPanel.add("PaymentPanel", cPaymentPanel);
 
         // Message panel
-        
         messagePanel = new JPanel(new BorderLayout());
     
         // Text area for displaying messages
@@ -236,8 +235,14 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         mainBtnShowPayment = new JButton("Show payments");
         mainBtnShowPayment.addActionListener(this);
         mainBtnsPanel.add(mainBtnShowPayment);
+        
         //add message button --> Project Design
-        mainBtnMessage = new JButton("Message");
+        
+        //check for new messages
+        mainBtnMessage = new messageButton();
+        
+        
+        
         mainBtnMessage.addActionListener(this);
         mainBtnsPanel.add(mainBtnMessage);
         
@@ -263,6 +268,35 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         infoPanel.add(taMessage);
         con.add(infoPanel, BorderLayout.SOUTH);
     }
+    
+    private class messageButton extends JButton{
+
+		public messageButton() {
+    		super("Messages");
+    	}
+    	
+        public void updateText() {
+        	
+        	//get the current user
+        	Staff currentUser = rcController.getStaffData(rcController.getCurrentUserID());
+        	
+        	
+        	
+        	//determine if the user has a new message
+        	if (currentUser != null && currentUser.hasNewAnnouncement()) {
+            	//makes the button
+        	    this.setText("** Messages **");
+        		
+        	}
+        	else {
+    	    	//makes the button
+        	    this.setText("Messages");
+    	    	
+        	}
+        }
+    }
+    
+
     
 
     public void setLoginUserName(String newName)
@@ -534,11 +568,13 @@ public class UserInterface_GUI extends JFrame implements ActionListener
         else if (ae.getSource() == btnDisplayMessages) {
             messageScreen.setEditable(false);
             messageScreen.setText(""); // Clear the screen
-           
+            
+            //reset the current user's hasAnnouncement state
+            Staff currentUser = rcController.getDatabase().findStaffByID(rcController.getCurrentUserID());
+
             try {
                 // Load the entire message from the database
                 String message = rcController.getDatabase().loadMessageFromDatabase();
-                Staff currentUser = rcController.getDatabase().findStaffByID(rcController.getCurrentUserID());
                 if (!message.isEmpty()) {
                     //disiplay if current user has new announcement
                     if (currentUser.hasNewAnnouncement()) {
@@ -546,6 +582,8 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                         currentUser.setNewAnnouncement(false);//true -->try changing this to true
                         //update file
                         rcController.getDatabase().saveAnnouncementState();
+                        //remove notification
+                        mainBtnMessage.updateText();
                     }
                 } else {
                     messageScreen.setText("No messages to display.");
@@ -680,6 +718,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                     pwPassword.setText("");
                     changeMainPanel("Home");
                     setClockOutButton();
+                    mainBtnMessage.updateText();
                 }
                 else
                 {
