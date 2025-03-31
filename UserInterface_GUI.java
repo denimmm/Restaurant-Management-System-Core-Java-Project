@@ -9,60 +9,60 @@ import javax.swing.event.*;
 
 import java.util.*;
 
-public class UserInterface_GUI extends JFrame implements ActionListener
-{
+public class UserInterface_GUI extends JFrame implements ActionListener {
     private Container       con;
     private Controller_GUI  rcController;
     private String          currentUserName;
-    
+
     // components for menu
     private JMenuBar   menuBar;
     private JMenu      mnFile;
     private JMenuItem  mntm1, mntm2;
-    
-    
-    //-------- Master panel -------------- 
+
+    //-------- Master panel --------------
     //Main content panel(CENTER)
     private JPanel         mainPanel;
-    
+
     //Head panel (North)
     private JPanel         headPanel;
     private JLabel         headTitle;
     private JButton        headBtnLogin;
     private JButton        headBtnLogout;
-    
+
     //Main button panel(WEST)
     private JPanel         mainBtnsPanel;
-    // Main buttons
-
     private JButton        mainBtnShowMenu;
     private JButton        mainBtnManageOrder;
-    // Main buttons for management
     private JButton        mainBtnManageEmployee;
     private JButton        mainBtnManageMenuItem;
     private JButton        mainBtnShowTotalSales;
     private JButton        mainBtnShowPayment;
     private messageButton        mainBtnMessage;
+
+
+    /// @brief Custom button for pizza customization (visible only for pizza)
+    /// @author Alex Ratchev
+    private JButton        customButton;
+
     //Information panel(SOUTH)
     private JPanel         infoPanel;
     private JLabel         labelLoginUserName;
-    private JButton         btnClockOut;
+    private JButton        btnClockOut;
     private JTextArea      taMessage;
-    
+
     //-------- Contents panel --------------
-    // components for home panel
     private JPanel         homePanel;
     private JLabel         homeImage;
-    
+
     private LoginPanel          cLoginPanel;
     private MenuListPanel       cMenuListPanel;
     private OrderListPanel      cOrderListPanel;
     private OrderDetailPanel    cOrderDetailPanel;
     private EmployeeListPanel   cEmployeeListPanel;
     private EditEmployeePanel   cEditEmployeePanel;
-    private MenuManagementPanel       cMenuManagementPanel;
-    private EditMenuItemPanel       cEditMenuItemPanel;
-    private TotalSalesPanel       cTotalSalesPanel;
+    private MenuManagementPanel cMenuManagementPanel;
+    private EditMenuItemPanel   cEditMenuItemPanel;
+    private TotalSalesPanel     cTotalSalesPanel;
     private PaymentPanel        cPaymentPanel;
     
     // ----- Message panel for message screen -------
@@ -79,30 +79,23 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     private final static int WINDOW_Y = 100;
     private final static int WINDOW_WIDTH = 900;
     private final static int WINDOW_HEIGHT = 600;
-    /**
-     * Constructor for objects of class UserInterface_GUI
-     */
-    public UserInterface_GUI(Controller_GUI rController)
-    {
+
+    public UserInterface_GUI(Controller_GUI rController) {
         this.rcController = rController;
         this.con = getContentPane();
-        
-        // Set frame
+
         setTitle("Valentino Restaurant Management System");
         setBounds(WINDOW_X, WINDOW_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         createMasterPanelConpornents();
         currentUserName = "";
         setLoginUserName(currentUserName);
-        
-        //------- Create main content panels
-        //Home panel
+
         homePanel = new JPanel();
         homeImage = new JLabel();
-        
-        //Random generator = new Random();
+
         int i = new Random().nextInt(4)+1;
         homeImage.setHorizontalAlignment(SwingConstants.CENTER);
         homeImage.setVerticalAlignment(SwingConstants.CENTER);
@@ -162,6 +155,13 @@ public class UserInterface_GUI extends JFrame implements ActionListener
 
         // Add the message panel to the mainPanel
         mainPanel.add("Message", messagePanel);
+
+
+        /// @brief This is a placeholder to set the button to visable
+        /// @author Alex Ratchev
+        customButton = new JButton("Custom");
+        customButton.setVisible(true); // it is not directly used in this frame
+
         changeMode(MODE_ANONYMOUS);
     }
     
@@ -727,7 +727,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
     private void  changeMainPanel(String panelName)
     {
         ((CardLayout) mainPanel.getLayout()).show( mainPanel, panelName);
-        displayMessage("Main paanel change :" + panelName);
+        displayMessage("Main panel change :" + panelName);
     }
     
     /****************************************************************
@@ -1487,34 +1487,27 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             }
         }
     }
-    
+
     /****************************************************************
      * Order list panel
-    *****************************************************************/       
-    private class OrderListPanel extends JPanel implements ActionListener
-    {
-        private JScrollPane     scrollPanel;
-        //private JTextArea       displayArea;
-        private JPanel          btnPanel;
-        private JButton         btnNewOrder;
-        private JButton         btnEditOrder;
-        private JButton         btnCloseOrder;
-        private JButton         btnCancelOrder;
-        private JLabel          lblTotalSales;
-        private JLabel          lblTotalCount;
-        private JLabel          lblCancelTotal;
-        private JLabel          lblCancelCount;
-        private JList           displayList;
-        
-        public OrderListPanel()
-        {
+     *****************************************************************/
+    private class OrderListPanel extends JPanel implements ActionListener {
+        private JScrollPane scrollPanel;
+        private JButton btnNewOrder;
+        private JButton btnEditOrder;
+        private JButton btnCloseOrder;
+        private JButton btnCancelOrder;
+        private JLabel lblTotalSales;
+        private JLabel lblTotalCount;
+        private JLabel lblCancelTotal;
+        private JLabel lblCancelCount;
+        private JList displayList;
+
+        public OrderListPanel() {
             GridBagLayout gbLayout = new GridBagLayout();
-            this.setLayout( gbLayout);
+            this.setLayout(gbLayout);
             GridBagConstraints gbc = new GridBagConstraints();
-            /*displayArea = new JTextArea();
-            displayArea.setFont(new Font(Font.MONOSPACED,Font.PLAIN,16));
-            displayArea.setEditable(false);
-            displayArea.setMargin(new Insets(5, 5, 5, 5));*/
+
             scrollPanel = new JScrollPane();
             scrollPanel.setPreferredSize(new Dimension(500, 300));
             gbc.gridx = 0;
@@ -1522,41 +1515,41 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             gbc.gridwidth = 4;
             gbLayout.setConstraints(scrollPanel, gbc);
             this.add(scrollPanel);
-            
+
             lblTotalCount = new JLabel();
-            lblTotalCount.setFont(new Font(Font.MONOSPACED,Font.PLAIN,16));
+            lblTotalCount.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
             gbc.gridx = 0;
             gbc.gridy = 1;
             gbc.gridwidth = 2;
             gbc.insets = new Insets(10, 10, 10, 10);
             gbLayout.setConstraints(lblTotalCount, gbc);
             this.add(lblTotalCount);
-            
+
             lblTotalSales = new JLabel();
-            lblTotalSales.setFont(new Font(Font.MONOSPACED,Font.PLAIN,16));
+            lblTotalSales.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
             gbc.gridx = 2;
             gbc.gridy = 1;
             gbc.gridwidth = 2;
             gbLayout.setConstraints(lblTotalSales, gbc);
             this.add(lblTotalSales);
-            
+
             lblCancelCount = new JLabel();
-            lblCancelCount.setFont(new Font(Font.MONOSPACED,Font.PLAIN,16));
+            lblCancelCount.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
             gbc.gridx = 0;
             gbc.gridy = 2;
             gbc.gridwidth = 2;
             gbLayout.setConstraints(lblCancelCount, gbc);
             this.add(lblCancelCount);
-            
+
             lblCancelTotal = new JLabel();
-            lblCancelTotal.setFont(new Font(Font.MONOSPACED,Font.PLAIN,16));
+            lblCancelTotal.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
             gbc.gridx = 2;
             gbc.gridy = 2;
             gbc.gridwidth = 2;
             gbLayout.setConstraints(lblCancelTotal, gbc);
             this.add(lblCancelTotal);
-            
-            btnNewOrder     = new JButton("New");
+
+            btnNewOrder = new JButton("New");
             btnNewOrder.addActionListener(this);
             gbc.gridx = 0;
             gbc.gridy = 3;
@@ -1565,196 +1558,172 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbLayout.setConstraints(btnNewOrder, gbc);
             this.add(btnNewOrder);
-            
-            btnEditOrder    = new JButton("Edit");
+
+            btnEditOrder = new JButton("Edit");
             btnEditOrder.addActionListener(this);
             gbc.gridx = 1;
             gbc.gridy = 3;
             gbLayout.setConstraints(btnEditOrder, gbc);
             this.add(btnEditOrder);
-            
-            btnCloseOrder   = new JButton("Close");
+
+            btnCloseOrder = new JButton("Close");
             btnCloseOrder.addActionListener(this);
             gbc.gridx = 2;
             gbc.gridy = 3;
             gbLayout.setConstraints(btnCloseOrder, gbc);
             this.add(btnCloseOrder);
-            
-            btnCancelOrder  = new JButton("Cancel");
+
+            btnCancelOrder = new JButton("Cancel");
             btnCancelOrder.addActionListener(this);
             gbc.gridx = 3;
             gbc.gridy = 3;
             gbLayout.setConstraints(btnCancelOrder, gbc);
             this.add(btnCancelOrder);
-            
+
             displayList = new JList();
         }
-        
-        private void setTotalCount( int count)
-        {
-            lblTotalCount.setText("Today's order: " + count);
+
+        public void init() {
+            showOrderList();
         }
-        
-        private void setTotalSales( double sales)
-        {
-            lblTotalSales.setText("Total:$ " + sales);
-        }
-        
-        private void setCancelCount( int count)
-        {
-            lblCancelCount.setText("Canceled orders: " + count);
-        }
-        
-        private void setCancelTotal( double sales)
-        {
-            lblCancelTotal.setText("Cancel total:$ " + sales);
-        }
-        
-        private void showOrderList()
-        {
+
+        private void showOrderList() {
             displayList.setListData(rcController.createOrderList().toArray());
             scrollPanel.getViewport().setView(displayList);
-            
             setTotalCount(rcController.getTodaysOrderCnt());
             setTotalSales(rcController.getTotalSales());
             setCancelCount(rcController.getTodaysCancelCnt());
             setCancelTotal(rcController.getCancelTotal());
-            
         }
-        
-        public void init()
-        {
-            showOrderList();
+
+        private int getSelectedOrderID() {
+            String orderLine = (String) displayList.getSelectedValue();
+            if (orderLine == null) return -1;
+            return getIDfromString(orderLine, 4);
         }
-        
-        private int getSelectedOrderID()
-        {
-            String orderLine = (String)displayList.getSelectedValue();
-            if (orderLine == null)
-                return -1;
-                
-            return getIDfromString( orderLine, 4);
-        }
-        
-        private String getSelectedOrderStaffName()
-        {
-            String stringLine = (String)displayList.getSelectedValue();
-            if (stringLine == null)
-                return null;
-                
-            int index = stringLine.indexOf("Name:"); //Search string of "ID:"
-            if(index == -1)
-            {
+
+        private String getSelectedOrderStaffName() {
+            String stringLine = (String) displayList.getSelectedValue();
+            if (stringLine == null) return null;
+
+            int index = stringLine.indexOf("Name:");
+            if (index == -1) {
                 showErrorDialog("Error", "String 'Name:' is not found!!");
                 return null;
             }
-            
 
             String staffName = stringLine.substring(index + 5, index + 5 + 22);
             return staffName.trim();
         }
-        
+
+        private void setTotalCount(int count) {
+            lblTotalCount.setText("Today's order: " + count);
+        }
+
+        private void setTotalSales(double sales) {
+            lblTotalSales.setText("Total: $ " + sales);
+        }
+
+        private void setCancelCount(int count) {
+            lblCancelCount.setText("Canceled orders: " + count);
+        }
+
+        private void setCancelTotal(double sales) {
+            lblCancelTotal.setText("Cancel total: $ " + sales);
+        }
+
         public void actionPerformed(ActionEvent ae) {
-            if (ae.getSource() == btnNewOrder)
-            {
-                //((CardLayout) mainPanel.getLayout()).show( mainPanel, "OrderDetail");
+            if (ae.getSource() == btnNewOrder) {
                 changeMainPanel("OrderDetail");
                 int orderID = rcController.createOrder();
                 String staffName = rcController.getCurrentUserName();
                 cOrderDetailPanel.init(orderID, staffName);
-                //cOrderListPanel.init();
-            }
-            else if (ae.getSource() == btnEditOrder)
-            {
+            } else if (ae.getSource() == btnEditOrder) {
                 int orderID = getSelectedOrderID();
                 String staffName = getSelectedOrderStaffName();
-                if(orderID == -1) return;
-                    
-                ((CardLayout) mainPanel.getLayout()).show( mainPanel, "OrderDetail");
-                //int orderID = cController.createOrder();
+                if (orderID == -1) return;
+
+                changeMainPanel("OrderDetail");
                 cOrderDetailPanel.init(orderID, staffName);
-            }
-            else if (ae.getSource() == btnCloseOrder)
-            {
+            } else if (ae.getSource() == btnCloseOrder) {
                 int orderID = getSelectedOrderID();
-                if(orderID == -1) return;
-                
-                if( showYesNoDialog("Close order","Are you sure to close the order?") == DIALOG_YES)
-                {
-                    if( !rcController.closeOrder(orderID))
+                if (orderID == -1) return;
+
+                if (showYesNoDialog("Close order", "Are you sure to close the order?") == DIALOG_YES) {
+                    if (!rcController.closeOrder(orderID))
                         displayErrorMessage(rcController.getErrorMessage());
                     showOrderList();
                 }
-            }
-            else if (ae.getSource() == btnCancelOrder)
-            {
+            } else if (ae.getSource() == btnCancelOrder) {
                 int orderID = getSelectedOrderID();
-                if(orderID == -1) return;
-                
-                if( showYesNoDialog("Close order","Are you sure to close the order?") == DIALOG_YES)
-                {
-                    if(!rcController.cancelOrder(orderID))
+                if (orderID == -1) return;
+
+                if (showYesNoDialog("Cancel order", "Are you sure to cancel the order?") == DIALOG_YES) {
+                    if (!rcController.cancelOrder(orderID))
                         displayErrorMessage(rcController.getErrorMessage());
                     showOrderList();
                 }
             }
         }
     }
-    
+
     /****************************************************************
      * Order detail panel
-    *****************************************************************/       
+    *****************************************************************/
     private class OrderDetailPanel extends JPanel implements ActionListener, ListSelectionListener
     {
         //Right
         private JLabel          lblRightTitle;
-       
+
         private JScrollPane     menuScrollPanel;
         private JButton         btnAll;
         private JButton         btnMain;
         private JButton         btnDrink;
         private JButton         btnAlcohol;
         private JButton         btnDessert;
-        
+
         //Left
         private JLabel          lblLeftTitle;
         private JLabel          lblLeftInfo;
         private JScrollPane     orderScrollPanel;
-        //private JTextArea       displayArea;
         private JPanel          btnPanel;
         private JButton         btnAddItem;
         private JButton         btnDeleteItem;
         private JLabel          lblQuantity;
         private JTextField      tfQuantity;
-        
+
+        //Added new custom button
+        private JButton         customButton;
+
         private JLabel              lblTotalSales;
         private JLabel              lblOrderState;
         private JLabel              lblStaffName;
         private JList               orderItemList;
         private JList               menuList;
-        
+
         private int             currentOrderID;
         private int             orderItemCnt;
         private int             currentOrderState;
-        
+
         private JPanel          orderDetailPanel;
         private JPanel          menuListPanel;
-        
+
+
+        /// @class OrderDetailPanel
+        /// @brief
+        /// This class displays the order details, item list, and available menu items.
+        /// Added options to customize pizza to add addtional topping
+        /// @ author
+        /// Alex Ratchev
         public OrderDetailPanel()
         {
             this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-            //this.insets = new Insets(5, 5, 5, 5);
-            
             orderDetailPanel = new JPanel();
-            //orderDetailPanel.setSize(new Dimension(270, 600));
-            
             GridBagLayout gbLayout = new GridBagLayout();
-            orderDetailPanel.setLayout( gbLayout);
+            orderDetailPanel.setLayout(gbLayout);
             GridBagConstraints gbc = new GridBagConstraints();
-            
+
             lblLeftTitle = new JLabel("Order detail");
-            
-            //lblLeftTitle.setMaximumSize(new Dimension(350, 50));
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.gridwidth = 4;
@@ -1762,46 +1731,44 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             gbc.insets = new Insets(5, 5, 5, 5);
             gbLayout.setConstraints(lblLeftTitle, gbc);
             orderDetailPanel.add(lblLeftTitle);
-            
+
             lblLeftInfo = new JLabel("No  Item name                 quantity    price");
             gbc.gridx = 0;
             gbc.gridy = 1;
             gbc.gridwidth = 4;
             gbLayout.setConstraints(lblLeftInfo, gbc);
             orderDetailPanel.add(lblLeftInfo);
-            
+
             orderScrollPanel = new JScrollPane();
             gbc.gridx = 0;
             gbc.gridy = 2;
             gbc.ipadx = 0;
             gbc.ipady = 0;
             gbc.weighty = 1.0;
-            //gbc.fill = GridBagConstraints.VERTICAL;
             gbLayout.setConstraints(orderScrollPanel, gbc);
             orderDetailPanel.add(orderScrollPanel);
-            
+
             lblTotalSales = new JLabel();
             gbc.gridx = 0;
             gbc.gridy = 3;
             gbc.weighty = 0;
             gbc.gridwidth = 4;
-            //gbc.fill = GridBagConstraints.BOTH;
             gbLayout.setConstraints(lblTotalSales, gbc);
             orderDetailPanel.add(lblTotalSales);
-            
+
             lblOrderState = new JLabel();
             gbc.gridx = 0;
             gbc.gridy = 4;
             gbLayout.setConstraints(lblOrderState, gbc);
             orderDetailPanel.add(lblOrderState);
-            
+
             lblStaffName = new JLabel();
             gbc.gridx = 0;
             gbc.gridy = 5;
             gbc.gridwidth = 4;
             gbLayout.setConstraints(lblStaffName, gbc);
             orderDetailPanel.add(lblStaffName);
-            
+
             lblQuantity = new JLabel("Quantity");
             gbc.ipadx = 20;
             gbc.gridx = 0;
@@ -1809,7 +1776,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             gbc.gridwidth = 2;
             gbLayout.setConstraints(lblQuantity, gbc);
             orderDetailPanel.add(lblQuantity);
-            
+
             tfQuantity = new JTextField();
             tfQuantity.setInputVerifier(new IntegerInputVerifier(1,100));
             tfQuantity.addActionListener(this);
@@ -1817,7 +1784,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             gbc.gridy = 7;
             gbLayout.setConstraints(tfQuantity, gbc);
             orderDetailPanel.add(tfQuantity);
-            
+
             btnAddItem  = new JButton("Add");
             btnAddItem.addActionListener(this);
             gbc.gridx = 2;
@@ -1826,20 +1793,114 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             gbc.gridheight = 2;
             gbLayout.setConstraints(btnAddItem, gbc);
             orderDetailPanel.add(btnAddItem);
-            
+
             btnDeleteItem   = new JButton("Delete");
             btnDeleteItem.addActionListener(this);
             gbc.gridx = 3;
             gbc.gridy = 6;
             gbLayout.setConstraints(btnDeleteItem, gbc);
             orderDetailPanel.add(btnDeleteItem);
-            
-            
-            //Right panel            
+
+
+             ///@brief Custom button to trigger pizza topping customization.
+             ///Clicking it opens a new window with topping options.
+             ///@author Alex Ratchev
+            customButton = new JButton("Customize Pizza");
+            customButton.setVisible(true);
+            customButton.setFont(new Font("Arial", Font.BOLD, 14));
+            customButton.setBackground(new Color(255, 230, 150)); // Light yellow
+            customButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            customButton.setPreferredSize(new Dimension(200, 40)); // bigger size
+
+           /// @brief This will display the topping selection window with available checkboxes
+           /// Once topping are selected and saved, a message is shown
+           /// @author Alex Ratchev
+            customButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFrame toppingsFrame = new JFrame("Customize Your Pizza");
+                    toppingsFrame.setSize(400, 300);
+                    Window parentWindow = SwingUtilities.getWindowAncestor(orderDetailPanel);
+                    if (parentWindow != null) {
+                        toppingsFrame.setLocationRelativeTo(parentWindow);
+                    } else {
+                        toppingsFrame.setLocationRelativeTo(null); // fallback to center screen
+                    }
+                    toppingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    toppingsFrame.setLayout(new BorderLayout());
+
+                    JPanel toppingsPanel = new JPanel();
+                    toppingsPanel.setLayout(new BoxLayout(toppingsPanel, BoxLayout.Y_AXIS));
+                    toppingsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+                    // Add topping checkboxes
+                    JCheckBox cbPepperoni = new JCheckBox("Pepperoni");
+                    JCheckBox cbMushrooms = new JCheckBox("Mushrooms");
+                    JCheckBox cbCheese = new JCheckBox("Extra Cheese");
+                    JCheckBox cbOlives = new JCheckBox("Olives");
+                    JCheckBox cbBacon = new JCheckBox("Bacon");
+
+                    toppingsPanel.add(cbPepperoni);
+                    toppingsPanel.add(cbMushrooms);
+                    toppingsPanel.add(cbCheese);
+                    toppingsPanel.add(cbOlives);
+                    toppingsPanel.add(cbBacon);
+
+
+                    // Click add to finalize the pizza after toppings selected
+                    JButton btnAdd = new JButton("Create");
+                    btnAdd.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent ev) {
+                            // Simulate clicking the actual Add button for pizza
+                            Pizza pizza = new PlainPizza(); // Assuming you have a Plain Pizza class
+                            if(toppingsFrame.isVisible()){
+                                if(cbPepperoni.isSelected()) {
+                                    pizza = new DecoratorPepperoni(pizza);
+                                }
+                                if(cbMushrooms.isSelected()) {
+                                    pizza = new DecoratorMushroom(pizza);
+                                }
+                                if(cbCheese.isSelected()) {
+                                    pizza = new DecoratorExtraCheese(pizza);
+                                }
+                                if(cbOlives.isSelected()) {
+                                    pizza = new DecoratorOlives(pizza);
+                                }
+                                if(cbBacon.isSelected()) {
+                                    pizza = new DecoratorBacon(pizza);
+                                }
+                                rcController.setPizza(pizza);
+                            }
+                            btnAddItem.doClick();
+                            
+                            
+                            // Close the toppings window
+                            toppingsFrame.dispose();
+                        }
+                    });
+
+                    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                    buttonPanel.add(btnAdd);
+
+                    toppingsFrame.add(toppingsPanel, BorderLayout.CENTER);
+                    toppingsFrame.add(buttonPanel, BorderLayout.SOUTH);
+                    toppingsFrame.setVisible(true);
+                }
+            });
+
+
+            gbc.gridx = 0;
+            gbc.gridy = 8;
+            gbc.gridwidth = 4;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(10, 5, 10, 5); // more spacing
+            gbc.weighty = 0;
+            gbLayout.setConstraints(customButton, gbc);
+            orderDetailPanel.add(customButton);
+
+            //Right panel
             menuListPanel = new JPanel();
-            
-            menuListPanel.setLayout( gbLayout);
-            
+            menuListPanel.setLayout(gbLayout);
+
             lblRightTitle = new JLabel("Menu list");
             gbc.gridx = 0;
             gbc.gridy = 0;
@@ -1849,16 +1910,13 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             gbc.fill = GridBagConstraints.BOTH;
             gbLayout.setConstraints(lblRightTitle, gbc);
             menuListPanel.add(lblRightTitle);
-            
+
             menuScrollPanel = new JScrollPane();
-            //menuScrollPanel.setPreferredSize(new Dimension(270, 300));
-            //menuScrollPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
             gbc.gridy = 1;
             gbc.weighty = 1.0;
-            
             gbLayout.setConstraints(menuScrollPanel, gbc);
             menuListPanel.add(menuScrollPanel);
-            
+
             btnAll  = new JButton("All");
             btnAll.addActionListener(this);
             gbc.gridx = 0;
@@ -1868,44 +1926,45 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             gbc.fill = GridBagConstraints.BOTH;
             gbLayout.setConstraints(btnAll, gbc);
             menuListPanel.add(btnAll);
-            
+
             btnMain  = new JButton("Main");
             btnMain.addActionListener(this);
             gbc.gridx = 1;
             gbc.gridy = 2;
             gbLayout.setConstraints(btnMain, gbc);
             menuListPanel.add(btnMain);
-            
+
             btnDrink  = new JButton("Drink");
             btnDrink.addActionListener(this);
             gbc.gridx = 2;
             gbc.gridy = 2;
             gbLayout.setConstraints(btnDrink, gbc);
             menuListPanel.add(btnDrink);
-            
-             btnAlcohol  = new JButton("Alcohol");
-             btnAlcohol.addActionListener(this);
+
+            btnAlcohol  = new JButton("Alcohol");
+            btnAlcohol.addActionListener(this);
             gbc.gridx = 3;
             gbc.gridy = 2;
             gbLayout.setConstraints(btnAlcohol, gbc);
             menuListPanel.add(btnAlcohol);
-            
+
             btnDessert  = new JButton("Dessert");
             btnDessert.addActionListener(this);
             gbc.gridx = 4;
             gbc.gridy = 2;
             gbLayout.setConstraints(btnDessert, gbc);
             menuListPanel.add(btnDessert);
-            
+
             LineBorder border = new LineBorder(Color.BLACK, 1, false);
             menuListPanel.setBorder(border);
             orderDetailPanel.setBorder(border);
+            orderDetailPanel.setBackground(new Color(220, 230, 240)); // light gray-blue
+            customButton.setBackground(new Color(180, 200, 255));     // soft blue
+            customButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+            customButton.setFont(new Font("Arial", Font.BOLD, 12));
             this.add(orderDetailPanel);
             this.add(menuListPanel);
-            
-            
-            //menuListPanel.setMaximumSize(new Dimension(350, 600));
-            
+
             orderItemList   = new JList();
             orderItemList.setFont(new Font(Font.MONOSPACED,Font.PLAIN,10));
             orderItemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -1913,8 +1972,7 @@ public class UserInterface_GUI extends JFrame implements ActionListener
             menuList.addListSelectionListener(this);
             menuList.setFont(new Font(Font.MONOSPACED,Font.PLAIN,10));
             menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            
-       }
+        }
         
         public void init(int orderID, String staffName)
         {
@@ -2078,16 +2136,29 @@ public class UserInterface_GUI extends JFrame implements ActionListener
                 menuScrollPanel.getViewport().setView(menuList);
             }
         }
-        
-        public void valueChanged( ListSelectionEvent e ) {
-            if( e.getValueIsAdjusting() == true ){  //when mouce click happens
-                if( e.getSource() == menuList ){
-                     tfQuantity.setText("1");
+
+        // Updated method will dynamically show or hide the Custom button depending on the selection
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (!e.getValueIsAdjusting() && e.getSource() == menuList) {
+                tfQuantity.setText("1");
+
+                String selectedLine = (String) menuList.getSelectedValue();
+                if (selectedLine != null) {
+                    int menuID = getIDfromString(selectedLine, 4);
+
+                    // Only show Customize button for pizza (menu ID 101)
+                    customButton.setVisible(menuID == 101);
+                } else {
+                    customButton.setVisible(false); // Hide if nothing is selected
                 }
+
+                customButton.revalidate();
+                customButton.repaint();
             }
         }
     }
-    
+
     /****************************************************************
      * Total sales panel
     *****************************************************************/   

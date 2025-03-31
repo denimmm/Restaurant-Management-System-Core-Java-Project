@@ -74,13 +74,12 @@ public class Order
     {
         Iterator<OrderDetail> it = orderDetailList.iterator();
         OrderDetail re;
-        
         boolean found = false;
         
         while( it.hasNext() && !found)
         {
             re = it.next();
-            if( rNewMenuItem.getID() == re.getItemID())
+            if( rNewMenuItem.getID() == re.getItemID() && rNewMenuItem.getName().equals(re.getItemName()))
             {
                 found = true;
                 re.addQuantity(quantity);

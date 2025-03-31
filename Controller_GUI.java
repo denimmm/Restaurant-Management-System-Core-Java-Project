@@ -24,7 +24,8 @@ public class Controller_GUI
     private double      totalSales;         //Today's total sales
     private int         todaysCancelCnt;    //Today's cancel count
     private double      cancelTotal;        //Total cost of today's canceled orders
-    
+    //Added by Maksym Pyvovar
+    private Pizza       pizza; //Pizza for customization
     
     private String      errorMessage;
     
@@ -63,6 +64,10 @@ public class Controller_GUI
         totalSales = 0;
         todaysCancelCnt = 0;
         cancelTotal = 0;
+    }
+    public void setPizza(Pizza pizza)
+    {
+        this.pizza = pizza;
     }
     public Database getDatabase()
     {
@@ -306,6 +311,13 @@ public class Controller_GUI
      /***********************************************************
      * Menu management
      **********************************************************/
+    //Added by Maksym Pyvovar
+     public MenuItem ConvertPizzaToMenuItem(Pizza pizza)
+    {
+        MenuItem newItem = new MenuItem(Pizza.ID, pizza.getDescription(), pizza.getPrice(), Pizza.TYPE);
+        return newItem;
+    }
+
     public boolean addNewMenuItem(int newID, String newName, double newPrice, byte menuType)
     {
         MenuItem rMenuItem = cDatabase.findMenuItemByID(newID);
@@ -384,9 +396,17 @@ public class Controller_GUI
             //printErrorMessageToView("You are not eligible to edit the order.\nThe order belonges to " + rOrder.getStaffName() + ")");
             return false;    
         }
-        
+        //For testing Purpuses (start)
+        //Pizza pizza = new PlainPizza();
+        //pizza = new DecoratorPepperoni(pizza);
+        //pizza = new DecoratorMushroom(pizza);
+        //pizza = new DecoratorBacon(pizza);
+        //For testing Purpuses (end)
         MenuItem    rNewItem = null;
-        
+        if(addItemID==101){
+            rNewItem = ConvertPizzaToMenuItem(pizza);
+        }
+        else{
         rNewItem = cDatabase.findMenuItemByID(addItemID);
         if(rNewItem == null)
         {
@@ -395,7 +415,7 @@ public class Controller_GUI
             addItemID = 0;
             return false;
         }
-        
+    }
          //////////ADD!!!(database)/////////////
          cDatabase.addOrderItem(orderID, rNewItem, addItemQuantity);
          return true;
@@ -599,8 +619,7 @@ public class Controller_GUI
         
         while (it.hasNext()) {
             re = it.next();
-            output = String.format("%-4d|%-24s|%5d|%5.2f",
-                                    ++count, re.getItemName(), re.getQuantity(), re.getTotalPrice());
+            output = ++count + "|"+ re.getItemName()+ "|qty = " + re.getQuantity() + "|prc = " + re.getTotalPrice();
            initData.add(output);
         }
         if(initData.isEmpty())
