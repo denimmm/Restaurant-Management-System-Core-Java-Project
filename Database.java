@@ -36,7 +36,7 @@ public class Database
      ***************************************************************************/
     public ManagerNotifier getManagerNotifier()
     {
-        return this. managerNotifier;
+        return this.managerNotifier;
     }
      public ArrayList<Staff> getStaffList()
      {
