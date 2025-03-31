@@ -5,7 +5,7 @@
 import java.util.*;
 import java.text.*;
 
-public abstract class Staff
+public abstract class Staff implements EmployeeObserver
 {
     private int ID;
     private String lastName;
@@ -19,7 +19,7 @@ public abstract class Staff
     protected Date  startWorkTime;
     protected Date  finishWorkTime;
     protected double    wageRate;
-
+    private boolean newAnnouncement;
     //------------------------------------------------------------
     // constructor
     //------------------------------------------------------------
@@ -33,7 +33,7 @@ public abstract class Staff
         state = 0;
     }
     
-    public Staff( int newID, String newLastName, String newFirstName, String newPassword)
+    public Staff( int newID, String newLastName, String newFirstName, String newPassword, boolean hasAnnouncement)
     {
         setID( newID);
         setLastName(newLastName);
@@ -43,8 +43,15 @@ public abstract class Staff
         finishWorkTime = null;
         state = 0;
         //workState = 0;
+        newAnnouncement = hasAnnouncement;
     }
  
+    // implement the method of EmployeeObserver
+    public void update()
+    {
+        setNewAnnouncement(true);
+    }
+   
     //------------------------------------------------------------
     // setter
     //------------------------------------------------------------
@@ -68,7 +75,19 @@ public abstract class Staff
     {
         this.state = newState;
     }
-
+    //announcement 
+    public boolean hasNewAnnouncement()
+    {
+        return newAnnouncement;
+    }
+    public void setNewAnnouncement(boolean newAnnouncement)
+    {
+        this.newAnnouncement = newAnnouncement;
+    }
+    public boolean getNewAnnouncement()
+    {
+        return newAnnouncement;
+    }
     /*protected void setState(byte newState)
     {
         this.workState = newState;

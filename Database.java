@@ -5,7 +5,6 @@
 import java.util.*;
 import java.io.*;
 import java.lang.*;
-import java.util.Comparator;
 
 public class Database
 {
@@ -15,11 +14,13 @@ public class Database
     private final static String REPORT_FILE = "dataFiles/reports/report_";
     private final static String PAYMENT_FILE = "dataFiles/reports/payment_";
     private final static String WAGE_INFO_FILE = "dataFiles/wage_info.txt";
+    private final static String ANNOUNCEMENT_FILE = "dataFiles/announcement.txt";
+    private final static String MESSAGE_FILE = "dataFiles/message.txt";
     
     private ArrayList<Staff> staffList = new ArrayList<Staff>();
     private ArrayList<MenuItem> menuList = new ArrayList<MenuItem>();
     private ArrayList<Order> orderList = new ArrayList<Order>();
-    
+    private ManagerNotifier managerNotifier = new ManagerNotifier(this);
     private Date    date;
     int     todaysOrderCounts;
     /****************************************************************************
@@ -33,6 +34,10 @@ public class Database
     /****************************************************************************
      * Getter
      ***************************************************************************/
+    public ManagerNotifier getManagerNotifier()
+    {
+        return this.managerNotifier;
+    }
      public ArrayList<Staff> getStaffList()
      {
          return staffList;
@@ -220,9 +225,9 @@ public class Database
      {
          Staff newStaff;
          if(isManager)
-            newStaff = new Manager(newID, newLastName, newFirstName, newPassward);
+            newStaff = new Manager(newID, newLastName, newFirstName, newPassward, false);
          else
-            newStaff = new Employee(newID, newLastName, newFirstName, newPassward);
+            newStaff = new Employee(newID, newLastName, newFirstName, newPassward, false);
          staffList.add(newStaff);
          if(newStaff instanceof Manager)
          //if(newStaff.getClass().getName().equalsIgnoreCase("Manager"))
@@ -493,9 +498,11 @@ public class Database
                 String passward = record[1].trim();
                 String firstName = record[2].trim();
                 String lastName = record[3].trim();
-
+                String hasAnnouncement = record[4].trim();
+                
+                
                 // Add the data from file to the registerCourses array list
-                Employee rEmployee = new Employee(Integer.parseInt(id),lastName, firstName, passward);
+                Employee rEmployee = new Employee(Integer.parseInt(id),lastName, firstName, passward, Boolean.getBoolean(hasAnnouncement));
                 staffList.add(rEmployee);
                 line = reader.readLine();
             }
@@ -519,9 +526,10 @@ public class Database
                 String passward = record[1].trim();
                 String firstName = record[2].trim();
                 String lastName = record[3].trim();
-
+                String hasAnnouncement = record[4].trim();
+                
                 // Add the data from file to the registerCourses array list
-                Manager rManager = new Manager(Integer.parseInt(id),lastName,firstName, passward);
+                Manager rManager = new Manager(Integer.parseInt(id),lastName,firstName, passward, Boolean.getBoolean(hasAnnouncement));
                 staffList.add(rManager);
                 line = reader.readLine();
             }
@@ -593,7 +601,50 @@ public class Database
             throw new DatabaseException(message);
         }
     }
+
+
     
+    // message loade file 
+    public void loadAnnouncementState() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(ANNOUNCEMENT_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                int id = Integer.parseInt(parts[0]);
+                boolean newAnnouncement = Boolean.parseBoolean(parts[1]);
+    
+                Staff staff = findStaffByID(id);
+                if (staff != null) {
+                    staff.setNewAnnouncement(newAnnouncement);
+                }
+            }
+        }
+    }
+    public void saveAnnouncementState() throws IOException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(ANNOUNCEMENT_FILE))) {
+        for (Staff staff : staffList) {
+            writer.write(staff.getID() + "," + staff.hasNewAnnouncement());
+            writer.newLine();
+        }
+    }
+    
+}
+public void saveMessageToDatabase(String message) throws IOException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(MESSAGE_FILE, true))) {
+        writer.write(message);
+        writer.newLine();
+    }
+}
+public String loadMessageFromDatabase() throws IOException {
+    StringBuilder message = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new FileReader(MESSAGE_FILE))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            message.append(line).append("\n"); // Append each line with a newline character
+        }
+    }
+    return message.toString().trim(); // Return the full message as a single string
+}
     /****************************************************************************
     * File Edit
     ***************************************************************************/
@@ -637,7 +688,7 @@ public class Database
                     continue;
                 }
             
-                writer.write(re.getID() + "," + re.getPassword() + "," + re.getFirstName() + "," + re.getLastName()+ "\r\n");
+                writer.write(re.getID() + "," + re.getPassword() + "," + re.getFirstName() + "," + re.getLastName()+ "," + Boolean.toString(re.getNewAnnouncement()) +"\r\n");
             }
             writer.flush();
             writer.close();
