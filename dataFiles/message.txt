@@ -14,3 +14,4 @@ test
 this is a new message
 new message
 asdfasdfsafdsfkjdshfudshfldsjsjflksdf
+Hello conflict resolved
