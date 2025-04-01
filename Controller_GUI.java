@@ -40,6 +40,9 @@ public class Controller_GUI
     }
     public Controller_GUI()
     {
+    	//initialize the pizza
+    	pizza = new PlainPizza();
+    	
         this.cDatabase = new Database();
         try
         {
@@ -314,6 +317,8 @@ public class Controller_GUI
     //Added by Maksym Pyvovar
      public MenuItem ConvertPizzaToMenuItem(Pizza pizza)
     {
+
+    	 
         MenuItem newItem = new MenuItem(Pizza.ID, pizza.getDescription(), pizza.getPrice(), Pizza.TYPE);
         return newItem;
     }
